@@ -11,6 +11,11 @@
 
 #include "DefinitionTypes.h"
 
+
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/glm.hpp>
+using namespace glm;
 #include "CornerTable.h"
 // Include GLEW
 #define GLEW_STATIC
@@ -26,8 +31,11 @@ GLuint renderingProgram;
 
 GLuint m_VBO;
 GLuint m_VAO;
-
+int points;
 using namespace std;
+struct verticefin{
+	vec3 vortex;
+};
 
 GLuint createShaderProgram() {
     // declares two shaders as character strings
@@ -36,7 +44,7 @@ GLuint createShaderProgram() {
     		"#version 330  \n"
     		"layout (location = 0) in vec3 pos; \n"
     		"void main() { \n"
-    		" gl_Position = vec4(0.4*pos.x, 0.4*pos.y, pos.z, 1.0);	\n"
+    		" gl_Position = vec4(0.3*pos.x, 0.3*pos.y, pos.z, 1.0);	\n"
     		"}";
 
     // Fragment Shader
@@ -77,7 +85,7 @@ GLuint createShaderProgram() {
 void init (GLFWwindow* window) {
     renderingProgram = createShaderProgram();
     ifstream fin;
-        	fin.open("mesh/mesh5.mesh");
+        	fin.open("mesh/mesh23.mesh");
 
         	string name; //Off
         	int npoint,ntriangle,var3;//Numero de puntos, orden y colores
@@ -89,7 +97,7 @@ void init (GLFWwindow* window) {
         	double* vertexList = new double[3*npoint];
 
         	for(int i = 0; i<npoint;++i){
-        		fin>>vertexList[3*1]>>vertexList[3*i+1]>>vertexList[3*i+2];
+        		fin>>vertexList[3*i]>>vertexList[3*i+1]>>vertexList[3*i+2];
 
         	}
 
@@ -107,19 +115,35 @@ void init (GLFWwindow* window) {
         										numberCoordinatesByVertex);
 
         	//ct._cornerToVertex
+    //cout<<ct.getNumTriangles()<<endl<<ct.getNumberVertices()<<endl;
 
+    vec3 vert[ct.getNumTriangles()*3];
 
-    GLfloat vertices[] = {
-			-1.0f, -1.0f, 0.0f,
-			1.0f, -1.0f, 0.0f,
-			0.0f, 1.0f,	0.0f };
+    verticefin verti[ct.getNumTriangles()];
+
+    //cout<<ct.getNumTriangles()<<endl;
+
+    //cout<<ct.cornerToVertexIndex(9)<<endl; //Retorna posicion de un punto (no el punto)
+
+    //cout<<vertexList[ct.cornerToVertexIndex(9)]<<endl; // Retorna un punto de la posicion
+
+    for(int i = 0; i < ct.getNumTriangles();i++){
+
+    	vert[i*3] = vec3(vertexList[ct.cornerToVertexIndex(i*3+0)*3],vertexList[ct.cornerToVertexIndex(i*3+0)*3+1],vertexList[ct.cornerToVertexIndex(i*3+0)*3+2]);
+    	vert[i*3+1]=vec3(vertexList[ct.cornerToVertexIndex(i*3+1)*3],vertexList[ct.cornerToVertexIndex(i*3+1)*3+1],vertexList[ct.cornerToVertexIndex(i*3+1)*3+2]);
+		vert[i*3+2]=vec3(vertexList[ct.cornerToVertexIndex(i*3+2)*3],vertexList[ct.cornerToVertexIndex(i*3+2)*3+1],vertexList[ct.cornerToVertexIndex(i*3+2)*3+2]);
+
+    }
+
+    points = ct.getNumTriangles()*3;
+
 
 	glGenVertexArrays(1, &m_VAO);
 	glBindVertexArray(m_VAO);
 
 	glGenBuffers(1, &m_VBO);
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vert), vert, GL_STATIC_DRAW);
 
 	glVertexAttribPointer(
 			0,	// Atributo 0 (layout = 0 )
@@ -140,10 +164,10 @@ void init (GLFWwindow* window) {
 void display(GLFWwindow* window, double currentTime) {
     // loads the program containing the two compiled shaders into the OpenGL pipeline stages (onto the GPU)
     glUseProgram(renderingProgram);
-    glPointSize(30.0f);
+    //glPointSize(30.0f);
     // initiates pipeline processing
     // mode: GL_POINTS, from 0, one (point)
-    glDrawArrays(GL_POINTS, 0, 3);
+    glDrawArrays(GL_TRIANGLES, 0, points);
 }
 
 int main(void) {

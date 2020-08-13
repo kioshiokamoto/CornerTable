@@ -5,6 +5,7 @@
 #include <iostream>
 #include "DefinitionTypes.h"
 
+
 #include "CornerTable.h"
 
 using namespace std;
