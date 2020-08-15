@@ -33,8 +33,8 @@ GLuint m_VBO;
 GLuint m_VAO;
 int points;
 using namespace std;
-struct verticefin{
-	vec3 vortex;
+struct vortex{
+	vec3 pos;
 };
 
 GLuint createShaderProgram() {
@@ -85,7 +85,7 @@ GLuint createShaderProgram() {
 void init (GLFWwindow* window) {
     renderingProgram = createShaderProgram();
     ifstream fin;
-        	fin.open("mesh/mesh23.mesh");
+        	fin.open("mesh/mesh15.mesh");
 
         	string name; //Off
         	int npoint,ntriangle,var3;//Numero de puntos, orden y colores
@@ -119,7 +119,6 @@ void init (GLFWwindow* window) {
 
     vec3 vert[ct.getNumTriangles()*3];
 
-    verticefin verti[ct.getNumTriangles()];
 
     //cout<<ct.getNumTriangles()<<endl;
 
@@ -128,12 +127,12 @@ void init (GLFWwindow* window) {
     //cout<<vertexList[ct.cornerToVertexIndex(9)]<<endl; // Retorna un punto de la posicion
 
     for(int i = 0; i < ct.getNumTriangles();i++){
-
     	vert[i*3] = vec3(vertexList[ct.cornerToVertexIndex(i*3+0)*3],vertexList[ct.cornerToVertexIndex(i*3+0)*3+1],vertexList[ct.cornerToVertexIndex(i*3+0)*3+2]);
     	vert[i*3+1]=vec3(vertexList[ct.cornerToVertexIndex(i*3+1)*3],vertexList[ct.cornerToVertexIndex(i*3+1)*3+1],vertexList[ct.cornerToVertexIndex(i*3+1)*3+2]);
 		vert[i*3+2]=vec3(vertexList[ct.cornerToVertexIndex(i*3+2)*3],vertexList[ct.cornerToVertexIndex(i*3+2)*3+1],vertexList[ct.cornerToVertexIndex(i*3+2)*3+2]);
-
     }
+
+
 
     points = ct.getNumTriangles()*3;
 
