@@ -11,8 +11,7 @@ struct Triangle{
     unsigned int vertex1, vertex2, vertex3;
 };
 
-
-#define INF 9999
+#define INF 10000
 
 int minCost(vector<unsigned int> cost, vector<bool> marked){
     int min = INF;
@@ -32,7 +31,6 @@ void DijkstraPath(vector<unsigned int> &path, vector<vector<unsigned int>> adjma
     vector<unsigned int> cost(adjmat.size(), INF);
     path.resize(adjmat.size());
     fill(path.begin(), path.end(), -1);
-
     cost[i] = 0;
 
     for (unsigned int i=0; i<adjmat.size(); i++){
@@ -94,7 +92,7 @@ void buildAdjMat(CornerTable* CT, vector<vector<unsigned int>> &adjMat){
     }
 }
 
-void PrintDijkstraPath(vector<unsigned int> path, int o, int d){
+void mostrarCaminoDijkstra(vector<unsigned int> path, int o, int d){
     cout<<"Camino: "<<endl;
     int r = path[d];
     cout<<d<<" <- ";
@@ -106,11 +104,9 @@ void PrintDijkstraPath(vector<unsigned int> path, int o, int d){
 }
 
 void min_path(vector<unsigned int> &path, CornerTable *CT, int o, int d) {
-
     vector<vector<unsigned int>> adjmat; buildAdjMat(CT, adjmat);
-
-    if (CT->getNumTriangles() < 20){ // imprime la matriz de adyacencia solo si no es tan grande
-        cout<<"\nMatriz de adyacencia: "<<endl;
+    //Matriz adyacencia
+    if (CT->getNumTriangles() < 20){
         for(unsigned int i =0; i<adjmat.size(); i++){
             for (unsigned int j=0; j<adjmat.size(); j++){
                 cout<<adjmat[i][j]<<" ";
@@ -118,7 +114,6 @@ void min_path(vector<unsigned int> &path, CornerTable *CT, int o, int d) {
             cout<<endl;
         }
     }
-
     DijkstraPath(path, adjmat, o, d);
 
 }
