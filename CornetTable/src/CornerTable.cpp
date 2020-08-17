@@ -41,6 +41,7 @@ CornerTable::CornerTable( const CornerType* triangleList, double* vertexList,
 
     //Build the opposite table.
     buildOppositeTable( );
+
 }
 
 
